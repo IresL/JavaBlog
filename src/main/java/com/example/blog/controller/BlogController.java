@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class BlogController {
 
@@ -14,47 +16,34 @@ public class BlogController {
     private BlogService blogService;
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("posts", blogService.getAllPosts());
+    public String getAllPosts(Model model) {
+        List<Post> posts = blogService.getAllPosts();
+        model.addAttribute("posts", posts);
         return "index";
     }
 
-    @GetMapping("/post/{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
-        model.addAttribute("post", blogService.getPostById(id));
+    @GetMapping("/posts/{id}")
+    public String getPostById(@PathVariable Long id, Model model) {
+        Post post = blogService.getPostById(id);
+        model.addAttribute("post", post);
         return "post";
     }
 
-    @GetMapping("/post/new")
-    public String newPostForm(Model model) {
-        model.addAttribute("post", new Post());
-        return "new_post";
-    }
-
-    @PostMapping("/post")
-    public String createPost(@ModelAttribute Post post) {
-        blogService.createPost(post);
+    @PostMapping("/posts")
+    public String createPost(@ModelAttribute Post post, @RequestParam String authorName) {
+        blogService.createNewPost(post, authorName);
         return "redirect:/";
     }
 
-    @DeleteMapping("/post/{id}")
+    @PutMapping("/posts/{id}")
+    public String updatePost(@PathVariable Long id, @ModelAttribute Post post) {
+        blogService.updatePost(id, post);
+        return "redirect:/posts/" + id;
+    }
+
+    @DeleteMapping("/posts/{id}")
     public String deletePost(@PathVariable Long id) {
         blogService.deletePost(id);
-        return "redirect:/";
-    }
-
-    @GetMapping("/post/edit/{id}")
-    public String editPostForm(@PathVariable Long id, Model model) {
-        model.addAttribute("post", blogService.getPostById(id));
-        return "edit_post";
-    }
-
-    @PostMapping("/post/{id}")
-    public String updatePost(@PathVariable Long id, @ModelAttribute Post post) {
-        Post existingPost = blogService.getPostById(id);
-        existingPost.setTitle(post.getTitle());
-        existingPost.setContent(post.getContent());
-        blogService.createPost(existingPost);
         return "redirect:/";
     }
 }

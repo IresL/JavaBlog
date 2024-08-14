@@ -21,12 +21,10 @@ public class BlogService {
         return postRepository.findById(id).orElse(null);
     }
 
-    // Unique createPost method
     public Post createPost(Post post) {
         return postRepository.save(post);
     }
 
-    // Alternative createPost method with unique signature
     public Post createNewPost(Post post, String authorName) {
         post.setAuthor(authorName); // Set the author
         return postRepository.save(post);

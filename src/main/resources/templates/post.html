@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Post Details</title>
+</head>
+<body>
+<h1 th:text="${post.title}">Post Title</h1>
+<p th:text="${post.content}">Post Content</p>
+<p><strong>Author:</strong> <span th:text="${post.author}">Author Name</span></p>
+<ul>
+    <li th:each="comment : ${post.comments}">
+        <p th:text="${comment.content}">Comment Content</p>
+    </li>
+</ul>
+</body>
+</html>
