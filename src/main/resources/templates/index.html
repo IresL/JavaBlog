@@ -1,14 +1,63 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Blog Homepage</title>-->
+<!--    <link rel="stylesheet" href="/static/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<header>-->
+<!--    <h1>My Blog</h1>-->
+<!--    <nav>-->
+<!--        <a href="/login">Login</a>-->
+<!--        <a href="/register">Register</a>-->
+<!--    </nav>-->
+<!--</header>-->
+<!--<main>-->
+<!--    <section id="posts">-->
+<!--        <h2>All Posts</h2>-->
+<!--        &lt;!&ndash; Loop over posts and display them &ndash;&gt;-->
+
+<!--        <div th:each="post : ${posts}">-->
+<!--            <article>-->
+<!--                <h3 th:text="${post.title}">Post Title</h3>-->
+<!--                <p th:text="${post.content}">Post Content...</p>-->
+<!--                <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>-->
+<!--            </article>-->
+<!--        </div>-->
+<!--    </section>-->
+<!--</main>-->
+<!--<footer>-->
+<!--    <p>&copy; 2024 My Blog. Created By I.Lezhava.</p>-->
+<!--</footer>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-<h1>Blog Posts</h1>
-<div th:each="post : ${posts}">
-    <h2 th:text="${post.title}">Post Title</h2>
-    <p th:text="${post.content}">Post Content</p>
-    <p>Author: <span th:text="${post.author.username}">Author</span></p>
-</div>
+<header>
+    <h1>Welcome to the Blog</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/create">Create Post</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    </nav>
+</header>
+
+<main>
+    <div id="posts">
+        <!-- Posts will be loaded here dynamically -->
+    </div>
+</main>
+
+<script src="/static/js/scripts.js"></script>
 </body>
 </html>

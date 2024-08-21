@@ -12,6 +12,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
+// reminders for me. Marks the class as a Spring MVC controller, which means it will handle HTTP requests.
 public class BlogController {
 
     @Autowired
@@ -19,6 +20,8 @@ public class BlogController {
 
     @Autowired
     private UserService userService;
+
+    //@Autowired: Automatically injects the PostService and UserService beans into the controller. These services are used to handle the business logic related to posts and users
 
     @GetMapping("/")
     public String index(Model model) {
