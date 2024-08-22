@@ -1,46 +1,85 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const postForm = document.getElementById('post-form');
-    const postList = document.getElementById('posts');
+//document.addEventListener("DOMContentLoaded", function () {
+//    console.log("Blog loaded");
+//
+//    // Example: Handle form submissions via AJAX
+//    const form = document.querySelector('form');
+//    if (form) {
+//        form.addEventListener('submit', function (event) {
+//            event.preventDefault();
+//
+//            const formData = new FormData(form);
+//            const formAction = form.getAttribute('action');
+//
+//            fetch(formAction, {
+//                method: 'POST',
+//                body: formData,
+//            })
+//            .then(response => response.json())
+//            .then(data => {
+//                console.log('Success:', data);
+//                // Add logic to handle successful form submission
+//            })
+//            .catch((error) => {
+//                console.error('Error:', error);
+//                // Add logic to handle errors
+//            });
+//        });
+//    }
+//
+//    // Example: Load posts dynamically (if needed)
+//    const postsContainer = document.getElementById('posts');
+//    if (postsContainer) {
+//        fetch('/api/posts')
+//            .then(response => response.json())
+//            .then(data => {
+//                // Loop over the posts and display them
+//                data.forEach(post => {
+//                    const article = document.createElement('article');
+//                    const title = document.createElement('h3');
+//                    const content = document.createElement('p');
+//                    const readMore = document.createElement('a');
+//
+//                    title.textContent = post.title;
+//                    content.textContent = post.content;
+//                    readMore.textContent = 'Read more';
+//                    readMore.href = `/posts/${post.id}`;
+//
+//                    article.appendChild(title);
+//                    article.appendChild(content);
+//                    article.appendChild(readMore);
+//                    postsContainer.appendChild(article);
+//                });
+//            })
+//            .catch(error => console.error('Error loading posts:', error));
+//    }
+//});
 
-    // Dummy data for posts
-    let posts = [
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("Blog loaded");
 
-    ];
+    // Load posts dynamically
+    const postsContainer = document.getElementById('posts');
+    if (postsContainer) {
+        fetch('/api/posts')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(post => {
+                    const article = document.createElement('article');
+                    const title = document.createElement('h3');
+                    const content = document.createElement('p');
+                    const readMore = document.createElement('a');
 
-    // Function to render posts
-    function renderPosts() {
-        postList.innerHTML = '';
-        posts.forEach(post => {
-            const postItem = document.createElement('li');
-            postItem.innerHTML = `
-                <h3>${post.title}</h3>
-                <p>${post.content}</p>
-                <p><strong>Author:</strong> ${post.author}</p>
-            `;
-            postList.appendChild(postItem);
-        });
+                    title.textContent = post.title;
+                    content.textContent = post.content;
+                    readMore.textContent = 'Read more';
+                    readMore.href = `/posts/${post.id}`;
+
+                    article.appendChild(title);
+                    article.appendChild(content);
+                    article.appendChild(readMore);
+                    postsContainer.appendChild(article);
+                });
+            })
+            .catch(error => console.error('Error loading posts:', error));
     }
-
-    // Event listener for form submission
-    postForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Get form values
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-        const author = document.getElementById('author').value;
-
-        // Create new post
-        const newPost = { title, content, author };
-        posts.push(newPost);
-
-        // Re-render posts
-        renderPosts();
-
-        // Clear form
-        postForm.reset();
-    });
-
-    // Initial render
-    renderPosts();
 });

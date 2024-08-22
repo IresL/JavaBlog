@@ -1,20 +1,36 @@
 package com.example.blog.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "post")
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String content;
-    private String author;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    private LocalDateTime createdAt;
+
+    // Default constructor (no-argument constructor) required by JPA
+    public Post() {
+    }
+
+    // Constructor with parameters
+    public Post(String title, String content, User author) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createdAt = LocalDateTime.now(); // Set the creation time
+    }
 
     // Getters and setters
     public Long getId() {
@@ -41,19 +57,19 @@ public class Post {
         this.content = content;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
