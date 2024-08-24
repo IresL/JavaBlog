@@ -1,0 +1,96 @@
+1. Requirements for the Blog Application
+
+Functional Requirements:
+
+User Registration and Authentication:
+
+Users should be able to register an account.
+Users should be able to log in and log out.
+Passwords should be encrypted.
+Blog Management:
+
+Users should be able to create, edit, and delete blog posts.
+
+
+Commenting System:
+
+Users can comment on blog posts.
+
+
+Non-Functional Requirements:
+
+Security:
+
+Data should be encrypted both at rest and in transit.
+The system should prevent unauthorized access.
+
+
+
+2. Use Cases for the Blog Application
+Register New User:
+
+Actor: Visitor
+Description: A visitor registers to become a user by providing a username, email, and password.
+Login:
+
+Actor: User
+Description: A user logs in using their credentials.
+Create Post:
+
+Actor: User
+Description: A user creates a new blog post with a title, body, and tags.
+Edit Post:
+
+Actor: User
+Description: A user edits an existing post that they created.
+Delete Post:
+
+Actor: User
+Description: A user deletes one of their posts.
+Comment on Post:
+
+Actor: User
+Description: A user comments on a blog post.
+Reply to Comment:
+
+Actor: User
+Description: A user replies to an existing comment.
+Search Posts:
+
+Actor: User
+Description: A user searches for posts by keywords or tags.
+View Post:
+
+Actor: User
+Description: A user views a blog post, including its content and comments.
+Administer Users:
+
+
+3. Identifying Objects, Classes, and Relationships
+Key Objects:
+User
+
+Attributes: id, username, email, password, role
+Relationships: Has many Posts, Has many Comments
+Post
+
+Attributes: id, title, content, created_at, updated_at, author_id
+Relationships: Belongs to User, Has many Comments, Has many Tags
+Comment
+
+Attributes: id, content, created_at, updated_at, author_id, post_id, parent_comment_id
+Relationships: Belongs to User, Belongs to Post, Can have many Replies
+Tag
+
+Attributes: id, name
+Relationships: Has many Posts
+Notification
+
+Attributes: id, content, user_id, read_at
+Relationships: Belongs to User
+Relationships:
+User-Post: One-to-Many (A user can have multiple posts)
+Post-Comment: One-to-Many (A post can have multiple comments)
+User-Comment: One-to-Many (A user can have multiple comments)
+Post-Tag: Many-to-Many (A post can have multiple tags, and a tag can be associated with multiple posts)
+User-Notification: One-to-Many (A user can receive multiple notifications)
