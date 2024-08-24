@@ -1,18 +1,19 @@
 package com.example.blog.controller;
-import com.example.blog.model.User;
+
 import com.example.blog.model.Post;
+import com.example.blog.model.User;
 import com.example.blog.service.PostService;
 import com.example.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 
-@Controller
-// reminders for me. Marks the class as a Spring MVC controller, which means it will handle HTTP requests.
+@RestController // Indicates that this controller will return data instead of views.
+@RequestMapping("/api") // Base URL for all endpoints in this controller.
 public class BlogController {
 
     @Autowired
@@ -21,49 +22,38 @@ public class BlogController {
     @Autowired
     private UserService userService;
 
-    //@Autowired: Automatically injects the PostService and UserService beans into the controller. These services are used to handle the business logic related to posts and users
-
-    @GetMapping("/")
-    public String index(Model model) {
+    @GetMapping("/posts")
+    public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> posts = postService.findAllPosts();
-        model.addAttribute("posts", posts);
-        return "index";
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
+    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         Post post = postService.findPostById(id);
-        model.addAttribute("post", post);
-        return "view-post";
+        if (post != null) {
+            return new ResponseEntity<>(post, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/create")
-    public String createPostForm(Model model) {
-        model.addAttribute("post", new Post());
-        return "create-post";
-    }
-
-    @PostMapping("/create")
-    public String createPost(@ModelAttribute Post post, Principal principal) {
+    @PostMapping("/posts")
+    public ResponseEntity<Post> createPost(@RequestBody Post post, Principal principal) {
         String username = principal.getName();
-        postService.createPost(post.getTitle(), post.getContent(), username);
-        return "redirect:/";
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
+        Post createdPost = postService.createPost(post.getTitle(), post.getContent(), username);
+        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         userService.saveUser(user);
-        return "redirect:/login";
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser() {
+        // This would typically be handled by Spring Security, so no implementation needed here.
+        return new ResponseEntity<>("Login successful", HttpStatus.OK);
     }
 }

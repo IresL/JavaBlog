@@ -1,85 +1,104 @@
-//document.addEventListener("DOMContentLoaded", function () {
-//    console.log("Blog loaded");
-//
-//    // Example: Handle form submissions via AJAX
-//    const form = document.querySelector('form');
-//    if (form) {
-//        form.addEventListener('submit', function (event) {
-//            event.preventDefault();
-//
-//            const formData = new FormData(form);
-//            const formAction = form.getAttribute('action');
-//
-//            fetch(formAction, {
-//                method: 'POST',
-//                body: formData,
-//            })
-//            .then(response => response.json())
-//            .then(data => {
-//                console.log('Success:', data);
-//                // Add logic to handle successful form submission
-//            })
-//            .catch((error) => {
-//                console.error('Error:', error);
-//                // Add logic to handle errors
-//            });
-//        });
-//    }
-//
-//    // Example: Load posts dynamically (if needed)
-//    const postsContainer = document.getElementById('posts');
-//    if (postsContainer) {
-//        fetch('/api/posts')
-//            .then(response => response.json())
-//            .then(data => {
-//                // Loop over the posts and display them
-//                data.forEach(post => {
-//                    const article = document.createElement('article');
-//                    const title = document.createElement('h3');
-//                    const content = document.createElement('p');
-//                    const readMore = document.createElement('a');
-//
-//                    title.textContent = post.title;
-//                    content.textContent = post.content;
-//                    readMore.textContent = 'Read more';
-//                    readMore.href = `/posts/${post.id}`;
-//
-//                    article.appendChild(title);
-//                    article.appendChild(content);
-//                    article.appendChild(readMore);
-//                    postsContainer.appendChild(article);
-//                });
-//            })
-//            .catch(error => console.error('Error loading posts:', error));
-//    }
-//});
-
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Blog loaded");
+    const registerForm = document.getElementById('register-form');
+    const loginForm = document.getElementById('login-form');
+    const createPostForm = document.getElementById('create-post-form');
+    const postsList = document.getElementById('posts-list');
+    const createPostSection = document.getElementById('create-post-section');
 
-    // Load posts dynamically
-    const postsContainer = document.getElementById('posts');
-    if (postsContainer) {
-        fetch('/api/posts')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(post => {
-                    const article = document.createElement('article');
-                    const title = document.createElement('h3');
-                    const content = document.createElement('p');
-                    const readMore = document.createElement('a');
+    let token = '';
 
-                    title.textContent = post.title;
-                    content.textContent = post.content;
-                    readMore.textContent = 'Read more';
-                    readMore.href = `/posts/${post.id}`;
+    // Register user
+    registerForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const username = document.getElementById('register-username').value;
+        const password = document.getElementById('register-password').value;
 
-                    article.appendChild(title);
-                    article.appendChild(content);
-                    article.appendChild(readMore);
-                    postsContainer.appendChild(article);
-                });
-            })
-            .catch(error => console.error('Error loading posts:', error));
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        }).then(response => response.json())
+          .then(data => {
+              alert('User registered successfully!');
+              registerForm.reset();
+          }).catch(error => {
+              console.error('Error:', error);
+              alert('Registration failed!');
+          });
+    });
+
+    // Login user
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(username + ':' + password)
+            }
+        }).then(response => {
+            if (response.ok) {
+                alert('Login successful!');
+                token = btoa(username + ':' + password);
+                loginForm.reset();
+                createPostSection.style.display = 'block';
+                fetchPosts(); // Load posts after login
+            } else {
+                alert('Login failed!');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Login failed!');
+        });
+    });
+
+    // Fetch posts
+    function fetchPosts() {
+        fetch('/api/posts', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Basic ' + token
+            }
+        }).then(response => response.json())
+          .then(posts => {
+              postsList.innerHTML = '';
+              posts.forEach(post => {
+                  const postElement = document.createElement('div');
+                  postElement.classList.add('post');
+                  postElement.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p><small>by ${post.author.username}</small>`;
+                  postsList.appendChild(postElement);
+              });
+          }).catch(error => {
+              console.error('Error:', error);
+          });
     }
+
+    // Create new post
+    createPostForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const title = document.getElementById('post-title').value;
+        const content = document.getElementById('post-content').value;
+
+        fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + token
+            },
+            body: JSON.stringify({ title, content })
+        }).then(response => response.json())
+          .then(post => {
+              alert('Post created successfully!');
+              createPostForm.reset();
+              fetchPosts(); // Reload posts after creating a new one
+          }).catch(error => {
+              console.error('Error:', error);
+              alert('Failed to create post!');
+          });
+    });
 });
