@@ -1,0 +1,92 @@
+
+Memory updated
+Step 1: Identify Entities in the System
+For a blog application, typical entities might include:
+
+User (Key Entity)
+
+Represents users of the blog application.
+Post (Key Entity)
+
+Represents blog posts created by users.
+Comment (Weak Entity)
+
+Represents comments made on blog posts. It’s a weak entity because it depends on the existence of a Post.
+Category (Key Entity)
+
+Represents categories under which posts can be grouped.
+Tag (Associative Entity)
+
+Represents tags that can be associated with posts.
+Role (Key Entity)
+
+Represents roles assigned to users, like Admin, Author, etc.
+User_Role (Associative Entity)
+
+Represents the relationship between users and their roles.
+Step 2: Identify Relationships Between Entities
+User - Post: A user can create many posts, but each post is created by one user.
+
+Relationship: One-to-Many
+Post - Comment: A post can have many comments, but each comment is associated with one post.
+
+Relationship: One-to-Many
+Post - Category: A post can belong to one category, but a category can have many posts.
+
+Relationship: One-to-Many
+Post - Tag: A post can have many tags, and a tag can be associated with many posts.
+
+Relationship: Many-to-Many
+User - User_Role: A user can have multiple roles, and a role can be assigned to many users.
+
+Relationship: Many-to-Many
+Step 3: Identify Cardinality and Ordinality of the Relationships
+User - Post: (1
+)
+Post - Comment: (1
+)
+Post - Category: (1
+)
+Post - Tag: (M
+)
+User - User_Role: (M
+)
+Step 4: Add Attributes for the Entities
+User
+
+user_id (Primary Key)
+username
+email
+password
+created_at
+Post
+
+post_id (Primary Key)
+title
+content
+created_at
+user_id (Foreign Key)
+Comment
+
+comment_id (Primary Key)
+content
+created_at
+post_id (Foreign Key)
+Category
+
+category_id (Primary Key)
+name
+description
+Tag
+
+tag_id (Primary Key)
+name
+Role
+
+role_id (Primary Key)
+role_name
+User_Role
+
+user_role_id (Primary Key)
+user_id (Foreign Key)
+role_id (Foreign Key)
