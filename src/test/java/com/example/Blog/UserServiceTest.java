@@ -12,11 +12,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -31,30 +34,57 @@ public class UserServiceTest {
     private UserService userService;
 
     private User user;
-    private Role role;
 
     @BeforeEach
-    public void setup() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        user = new User();
-        user.setUsername("testUser");
-        user.setPassword("password");
 
-        role = new Role();
-        role.setName("USER");
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_USER");
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+
+        user = new User();
+        user.setId(1L);
+        user.setUsername("testuser");
+        user.setPassword("password123");
+        user.setRoles(roles);
     }
 
     @Test
-    public void testSaveUser() {
-        when(roleRepository.findByName(anyString())).thenReturn(role);
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+    void testSaveUser() {
+        when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         userService.saveUser(user);
 
-        assertNotNull(user.getRoles());
+        assertNotNull(user.getPassword());
+        assertEquals("encodedPassword", user.getPassword());
+
         verify(userRepository, times(1)).save(user);
-        verify(passwordEncoder, times(1)).encode("password");
+        verify(passwordEncoder, times(1)).encode("password123");
+    }
+
+    @Test
+    void testFindUserByUsername() {
+        when(userRepository.findByUsername("testuser")).thenReturn(user);
+
+        User foundUser = userService.findUserByUsername("testuser");
+
+        assertNotNull(foundUser);
+        assertEquals("testuser", foundUser.getUsername());
+    }
+
+    @Test
+    void testPasswordMatches() {
+        when(passwordEncoder.matches(any(CharSequence.class), any(String.class))).thenReturn(true);
+
+        boolean matches = userService.passwordMatches("rawPassword", "encodedPassword");
+
+        assertTrue(matches);
+
+        verify(passwordEncoder, times(1)).matches("rawPassword", "encodedPassword");
     }
 }
-
