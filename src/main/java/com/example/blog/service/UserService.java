@@ -23,9 +23,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role userRole = roleRepository.findByName("USER");
-        user.setRoles(Set.of(userRole));
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
         userRepository.save(user);
     }
     public User findUserByUsername(String username) {
