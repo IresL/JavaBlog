@@ -1,104 +1,98 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const registerForm = document.getElementById('register-form');
-    const loginForm = document.getElementById('login-form');
-    const createPostForm = document.getElementById('create-post-form');
-    const postsList = document.getElementById('posts-list');
-    const createPostSection = document.getElementById('create-post-section');
+document.addEventListener('DOMContentLoaded', () => {
+    const postsSection = document.getElementById('posts-section');
+    const loginSection = document.getElementById('login-section');
+    const registerSection = document.getElementById('register-section');
 
-    let token = '';
-
-    // Register user
-    registerForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const username = document.getElementById('register-username').value;
-        const password = document.getElementById('register-password').value;
-
-        fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        }).then(response => response.json())
-          .then(data => {
-              alert('User registered successfully!');
-              registerForm.reset();
-          }).catch(error => {
-              console.error('Error:', error);
-              alert('Registration failed!');
-          });
+    document.getElementById('home-link').addEventListener('click', () => {
+        postsSection.style.display = 'block';
+        loginSection.style.display = 'none';
+        registerSection.style.display = 'none';
+        loadPosts();
     });
 
-    // Login user
-    loginForm.addEventListener('submit', function (e) {
+    document.getElementById('login-link').addEventListener('click', () => {
+        postsSection.style.display = 'none';
+        loginSection.style.display = 'block';
+        registerSection.style.display = 'none';
+    });
+
+    document.getElementById('register-link').addEventListener('click', () => {
+        postsSection.style.display = 'none';
+        loginSection.style.display = 'none';
+        registerSection.style.display = 'block';
+    });
+
+    document.getElementById('login-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const username = document.getElementById('login-username').value;
-        const password = document.getElementById('login-password').value;
+        loginUser();
+    });
+
+    document.getElementById('register-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        registerUser();
+    });
+
+    function loadPosts() {
+        fetch('/api/posts')
+            .then(response => response.json())
+            .then(posts => {
+                const postsContainer = document.getElementById('posts-container');
+                postsContainer.innerHTML = '';
+                posts.forEach(post => {
+                    const postDiv = document.createElement('div');
+                    postDiv.className = 'post';
+                    postDiv.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p>`;
+                    postsContainer.appendChild(postDiv);
+                });
+            })
+            .catch(error => console.error('Error loading posts:', error));
+    }
+
+    function loginUser() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        console.log('Logging in with', username);
 
         fetch('/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa(username + ':' + password)
-            }
-        }).then(response => {
+            },
+            body: JSON.stringify({ username, password }),
+        })
+        .then(response => {
             if (response.ok) {
                 alert('Login successful!');
-                token = btoa(username + ':' + password);
-                loginForm.reset();
-                createPostSection.style.display = 'block';
-                fetchPosts(); // Load posts after login
             } else {
-                alert('Login failed!');
+                alert('Login failed. Please check your credentials.');
             }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('Login failed!');
-        });
-    });
-
-    // Fetch posts
-    function fetchPosts() {
-        fetch('/api/posts', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Basic ' + token
-            }
-        }).then(response => response.json())
-          .then(posts => {
-              postsList.innerHTML = '';
-              posts.forEach(post => {
-                  const postElement = document.createElement('div');
-                  postElement.classList.add('post');
-                  postElement.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p><small>by ${post.author.username}</small>`;
-                  postsList.appendChild(postElement);
-              });
-          }).catch(error => {
-              console.error('Error:', error);
-          });
+        })
+        .catch(error => console.error('Error during login:', error));
     }
 
-    // Create new post
-    createPostForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const title = document.getElementById('post-title').value;
-        const content = document.getElementById('post-content').value;
+    function registerUser() {
+        const username = document.getElementById('reg-username').value;
+        const password = document.getElementById('reg-password').value;
 
-        fetch('/api/posts', {
+        console.log('Registering with', username);
+
+        fetch('/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + token
             },
-            body: JSON.stringify({ title, content })
-        }).then(response => response.json())
-          .then(post => {
-              alert('Post created successfully!');
-              createPostForm.reset();
-              fetchPosts(); // Reload posts after creating a new one
-          }).catch(error => {
-              console.error('Error:', error);
-              alert('Failed to create post!');
-          });
-    });
+            body: JSON.stringify({ username, password }),
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Registration successful!');
+            } else {
+                alert('Registration failed. Please try again.');
+            }
+        })
+        .catch(error => console.error('Error during registration:', error));
+    }
+
+    loadPosts(); // Load posts initially
 });

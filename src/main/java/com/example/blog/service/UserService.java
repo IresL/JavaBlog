@@ -1,5 +1,5 @@
 package com.example.blog.service;
-import java.util.Set;
+
 import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.repository.RoleRepository;
@@ -7,6 +7,8 @@ import com.example.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -25,5 +27,12 @@ public class UserService {
         Role userRole = roleRepository.findByName("USER");
         user.setRoles(Set.of(userRole));
         userRepository.save(user);
+    }
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public boolean passwordMatches(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }

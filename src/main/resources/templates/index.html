@@ -7,46 +7,46 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div id="app">
-    <h1>Blog Application</h1>
+<header>
+    <h1>Welcome to My Blog</h1>
+    <nav>
+        <ul>
+            <li><a href="#" id="home-link">Home</a></li>
+            <li><a href="#" id="login-link">Login</a></li>
+            <li><a href="#" id="register-link">Register</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <!-- Registration Form -->
-    <div id="register-section">
-        <h2>Register</h2>
-        <form id="register-form">
-            <input type="text" id="register-username" placeholder="Username" required>
-            <input type="password" id="register-password" placeholder="Password" required>
-            <button type="submit">Register</button>
-        </form>
-    </div>
+<main id="main-content">
+    <section id="posts-section">
+        <h2>All Posts</h2>
+        <div id="posts-container"></div>
+    </section>
 
-    <!-- Login Form -->
-    <div id="login-section">
+    <section id="login-section" style="display:none;">
         <h2>Login</h2>
         <form id="login-form">
-            <input type="text" id="login-username" placeholder="Username" required>
-            <input type="password" id="login-password" placeholder="Password" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
             <button type="submit">Login</button>
         </form>
-    </div>
+    </section>
 
-    <!-- Create Post Form -->
-    <div id="create-post-section" style="display: none;">
-        <h2>Create Post</h2>
-        <form id="create-post-form">
-            <input type="text" id="post-title" placeholder="Title" required>
-            <textarea id="post-content" placeholder="Content" required></textarea>
-            <button type="submit">Create Post</button>
+    <section id="register-section" style="display:none;">
+        <h2>Register</h2>
+        <form id="register-form">
+            <label for="reg-username">Username:</label>
+            <input type="text" id="reg-username" name="username" required>
+            <label for="reg-password">Password:</label>
+            <input type="password" id="reg-password" name="password" required>
+            <button type="submit">Register</button>
         </form>
-    </div>
+    </section>
+</main>
 
-    <!-- Posts Section -->
-    <div id="posts-section">
-        <h2>Posts</h2>
-        <div id="posts-list"></div>
-    </div>
-</div>
-
-<script src="scripts.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
