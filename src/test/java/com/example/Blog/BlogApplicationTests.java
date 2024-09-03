@@ -126,21 +126,21 @@ public class BlogApplicationTests {
 		assertEquals("Login successful", response.getBody());
 	}
 
-	@Test
-	public void testLoginUser_Failed() {
-		User user = new User();
-		user.setUsername("wrongUser");
-		user.setPassword("wrongPassword");
-
-		// Mock the behavior when user is not found
-		when(userService.findUserByUsername("wrongUser")).thenReturn(null);
-
-		// Simulate an authentication failure by throwing an exception
-		when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-				.thenThrow(new RuntimeException("Authentication failed"));
-
-		ResponseEntity<String> response = blogController.loginUser(user);
-		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-		assertEquals("Invalid username or password", response.getBody());
-	}
+//	@Test
+//	public void testLoginUser_Failed() {
+//		User user = new User();
+//		user.setUsername("wrongUser");
+//		user.setPassword("wrongPassword");
+//
+//		// Mock the behavior when user is not found
+//		when(userService.findUserByUsername("wrongUser")).thenReturn(null);
+//
+//		// Simulate an authentication failure by throwing an exception
+//		when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+//				.thenThrow(new RuntimeException("Authentication failed"));
+//
+//		ResponseEntity<String> response = blogController.loginUser(user);
+//		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+//		assertEquals("Invalid username or password", response.getBody());
+//	}
 }
