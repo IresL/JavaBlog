@@ -23,7 +23,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode password
         userRepository.save(user);
     }
     public User findUserByUsername(String username) {

@@ -20,7 +20,7 @@ public class Post {
 
     private LocalDateTime createdAt;
 
-    // Default constructor (no-argument constructor) required by JPA
+    // კონსტრუქტორი (no-argument constructor) required by JPA
     public Post() {
     }
 
@@ -29,7 +29,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.author = author;
-        this.createdAt = LocalDateTime.now(); // Set the creation time
+        this.createdAt = LocalDateTime.now(); //  პოსტის შექმნის დრო
     }
 
     // Getters and setters

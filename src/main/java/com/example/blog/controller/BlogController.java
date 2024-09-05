@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@RestController // Indicates that this controller will return data instead of views.
-@RequestMapping("/api") // Base URL for all endpoints in this controller.
+@RestController // აღნიშნავს რომ ის აბრუნებს დატას view-ს ნაცვლად
+@RequestMapping("/api") // საბაზისო URL ყველა endpoints -სთვის ამ კონტროლერში.
 public class BlogController {
 
     @Autowired

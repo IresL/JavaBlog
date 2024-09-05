@@ -50,7 +50,7 @@ public class SecurityConfig {
                         logout
                                 .permitAll()
                 )
-                .csrf().disable(); // გააუქმე CSRF for simplicity in testing
+                .csrf().disable(); // გააუქმე CSRF for simplicity ტესტირებისთვის
 
         return http.build();
     }
